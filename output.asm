@@ -7,9 +7,16 @@ UpdateView:
         rst 16
         call ResetColour
 
-        ld c, $10
+        ld hl, (Address)
+        push hl
+        ld a, l
+
+        and $f8 ; we want to start the row on a multiple of $08
+        ld l, a
+        ld (Address), hl
         ld de, $ffe0
         call FixHL
+        ld c, $10
 UpdateLoopRow:
         ld a, $13
         rst 16
@@ -41,8 +48,8 @@ UpdateLoopCol:
         dec c
         jr nz, UpdateLoopRow
 
-        ld de, $ffa0
-        call FixHL
+        pop hl
+        ld (Address), hl
 
         ret
 
