@@ -20,7 +20,7 @@ UpdateView:
         and $f0 ; we want to start the row on a multiple of $10
         ld l, a
         ld (Address), hl
-        ld de, $ffc0 ; move the start row back four
+        ld de, $ff80 ; move the start row back eight
         call FixHL
 
         ld c, $10 ; row counter
@@ -28,7 +28,7 @@ UpdateLoopRow:
         ld a, $13
         rst 16
         ld a, c ; if this is the active row, set bright, otherwise don't
-        cp $0c
+        cp $08
         jr nz, NotActiveRow
         ld a, $01
         jr StartRow
@@ -57,7 +57,7 @@ PrintCont:
         pop hl
         ld (Address), hl
 
-        ld de, $1102
+        ld de, $1101
         call PrintAt
 
         ld d, h
@@ -65,7 +65,7 @@ PrintCont:
         ld d, l
         call PrintValue
 
-        ld de, $110a
+        ld de, $1107
         call PrintAt
 
         ld a, (hl)
@@ -75,9 +75,8 @@ PrintCont:
         ld a, l
         and $0f
         sla a
-        add $80
         ld l, a
-        ld h, $58
+        ld h, $59
         ld (hl), $31
         inc hl
         ld (hl), $31
