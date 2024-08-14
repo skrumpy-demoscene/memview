@@ -11,10 +11,10 @@ UpdateView:
         push hl
         ld a, l
 
-        and $f8 ; we want to start the row on a multiple of $08
+        and $f0 ; we want to start the row on a multiple of $10
         ld l, a
         ld (Address), hl
-        ld de, $ffe0
+        ld de, $ffc0
         call FixHL
         ld c, $10
 UpdateLoopRow:
@@ -29,45 +29,8 @@ NotActiveRow:
         ld a, $00
 StartRow:
         rst 16
-        call PrintAddress
-        ld b, $08
+        ld b, $10
 UpdateLoopCol:
-        call PrintData
-        
-        ld hl, (Address)
-        inc hl
-        ld (Address), hl
-
-        djnz UpdateLoopCol
-        
-        ld a, $20
-        rst 16
-        ld a, $20
-        rst 16
-
-        dec c
-        jr nz, UpdateLoopRow
-
-        pop hl
-        ld (Address), hl
-
-        ret
-
-PrintAddress:
-        ld hl, (Address)
-        ld d, h
-        call PrintValue
-        ld d, l
-        call PrintValue
-
-        ld a, $20
-        rst 16
-        ld a, $20
-        rst 16
-
-        ret
-
-PrintData:
         ld hl, (Address)
         ld a, (Flags)
         bit 4, a
@@ -75,6 +38,33 @@ PrintData:
         ld a, (hl)
         ld d, a
         call PrintValue
+        
+        ld hl, (Address)
+        inc hl
+        ld (Address), hl
+
+        djnz UpdateLoopCol
+        
+        dec c
+        jr nz, UpdateLoopRow
+
+        pop hl
+        ld (Address), hl
+
+        ld a, $16
+        rst 16
+        ld a, $11
+        rst 16
+        ld a, $02
+        rst 16
+
+        ld d, h
+        call PrintValue
+        ld d, l
+        call PrintValue
+
+        ret
+
 PrintEnd:
         ld a, $20
         rst 16
@@ -87,15 +77,11 @@ PrintChar:
         cp $a2 ; and below the last guarnateed UDG (S)
         jr nc, PrintSkip
         rst 16
-        jr PrintSpace
+        jr PrintEnd
 PrintSkip:
         ld d, a
         ld a, $2e
         rst 16
-PrintSpace:
-        ld a, $20
-        rst 16
-        jr PrintEnd
 
 PrintValue:
         ld a, d
