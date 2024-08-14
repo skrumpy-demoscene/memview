@@ -2,7 +2,7 @@ UserInput:
         call WaitKey
 
         cp $58 // exit
-        call z, Exit
+        jp z, Exit
         
         cp $20 // change address
         call z, ChangeAddress
