@@ -14,13 +14,6 @@ Loop:
         INCLUDE "input.asm"
         INCLUDE "commands.asm"
 
-FixHL:
-        ld hl, (Address)
-        add hl, de
-        ld (Address), hl
-
-        ret
-
 Exit:
         pop af
         pop de

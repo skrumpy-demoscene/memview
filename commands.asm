@@ -1,3 +1,34 @@
+FixHL:
+        ld hl, (Address)
+        add hl, de
+
+        ld d, a
+        and $f8 ; we want to land on a multiple of 8
+        ld l, a
+        ld (Address), hl
+
+        ld a, d
+        and $07 ; get address offset
+        ld d, a
+        ld a, (Flags)
+        and $f8
+        add d
+        ld (Flags), a   ; update flags
+
+        ret
+        
+ForwardAddr:
+        ld de, $0001
+        call FixHL
+
+        ret
+        
+BackAddr:
+        ld de, $ffff
+        call FixHL
+
+        ret
+
 ForwardLine:
         ld de, $0008
         call FixHL
@@ -56,10 +87,10 @@ ChangeAddress:
         ld l, a
         call WaitHex
         add l
-        and $f8 ; we want to land on a multiple of 8
-        ld l, a
 
         ld (Address), hl
+        ld de, $0000
+        call FixHL
 
         ; clear prompt
         ld a, $16
@@ -85,12 +116,12 @@ ChangeAddress:
 
 TextToggle:
         ld a, (Flags)
-        bit 0, a
+        bit 4, a
         jr z, ToggleTextOn
-        res 0, a
+        res 4, a
         jr ToggleTextGo
 ToggleTextOn:
-        set 0, a
+        set 4, a
 ToggleTextGo:
         ld (Flags), a
 

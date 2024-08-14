@@ -5,6 +5,10 @@ UserInput:
         call z, Exit
         cp $20 // change address
         call z, ChangeAddress
+        cp $50 // forward by 1
+        call z, ForwardAddr
+        cp $4f // back by 1
+        call z, BackAddr
         cp $0a // forward by 8
         call z, ForwardLine
         cp $0b // back by 8
