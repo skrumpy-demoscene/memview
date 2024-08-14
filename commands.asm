@@ -38,13 +38,13 @@ PokeAddress:
 
         call WaitHex ; wait for first digit
         cp $ff
-        jr z, EndPokeAddress
+        ret z
         call SlideA
         ld h, a
         
         call WaitHex ; wait for second digit
         cp $ff
-        jr z, EndPokeAddress
+        ret z
         add h
 
         ld hl, (Address)
@@ -52,21 +52,8 @@ PokeAddress:
         inc hl
         ld (Address), hl
 
-EndPokeAddress:
-        ; clear prompt
-        ld de, $1106
-        call PrintAt
-        ld a, $20
-        rst 16
-
         ret
 
-WaitForDigit:
-        call WaitHex ; wait for first digit
-        cp $ff
-        jr z, EndChangeAddress
-
-        ret
 ChangeAddress:
         ; clear the address
         ld hl, $0000
@@ -77,30 +64,31 @@ ChangeAddress:
         ld a, $2a
         rst 16
 
-        call WaitForDigit
+        call WaitHex ; wait for first digit
+        cp $ff
+        ret z
         call SlideA
         ld h, a
 
-        call WaitForDigit
+        call WaitHex ; wait for second digit
+        cp $ff
+        ret z
         add h
         ld h, a
 
-        call WaitForDigit
+        call WaitHex ; wait for first digit
+        cp $ff
+        ret z
         call SlideA
         ld l, a
 
-        call WaitForDigit
+        call WaitHex ; wait for second digit
+        cp $ff
+        ret z
         add l
         ld l, a
 
         ld (Address), hl
-
-EndChangeAddress
-        ; clear prompt
-        ld de, $1100
-        call PrintAt
-        ld a, $20
-        rst 16
 
         ret
 
