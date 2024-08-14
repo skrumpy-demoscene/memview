@@ -29,8 +29,8 @@ StartRow:
         rst 16
         ld b, $10 ; column counter
 UpdateLoopCol:
-        ld a, (Flags)
-        bit 4, a ; text or digits?
+        ld a, $00 ; self-modifying code, this is flipped between $00 and $ff
+        cp $00
         jr nz, PrintChar
 
         ld a, (hl)

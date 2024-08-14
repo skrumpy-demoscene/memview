@@ -36,7 +36,6 @@ PokeAddress:
         ld a, $3e
         rst 16
 
-        ; TODO optimise
         call WaitHex ; wait for first digit
         cp $ff
         jr z, EndPokeAddress
@@ -106,9 +105,10 @@ EndChangeAddress
         ret
 
 TextToggle:
-        ld a, (Flags)
-        xor $10
-        ld (Flags), a
+        ; self-modifying code, changes the result of the $cp $00 and thus the Z flag
+        ld a, (UpdateLoopCol+1)
+        cpl
+        ld (UpdateLoopCol+1), a
 
         ret
 
