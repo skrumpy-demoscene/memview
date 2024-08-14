@@ -47,10 +47,11 @@ PokeAddress:
         call PrintAt
         ld a, $3e
         rst 16
-        // ld a, $20
-        // rst 16
+        ; ld a, $20
+        ; rst 16
 
-        call WaitHex
+        ; TODO optimise
+        call WaitHex ; wait for first digit
         cp $ff
         jr z, EndPokeAddress
         sla a
@@ -59,13 +60,13 @@ PokeAddress:
         sla a
         ld h, a
         
-        call WaitHex
+        call WaitHex ; wait for second digit
         cp $ff
         jr z, EndPokeAddress
         add h
 
         ld hl, (Address)
-        ld (hl), a
+        ld (hl), a ; update data
         inc hl
         ld (Address), hl
 
@@ -87,10 +88,11 @@ ChangeAddress:
         call PrintAt
         ld a, $2a
         rst 16
-        // ld a, $20
-        // rst 16
+        ; ld a, $20
+        ; rst 16
 
-        call WaitHex
+        ; TODO optimise
+        call WaitHex ; wait for first digit
         cp $ff
         jr z, EndChangeAddress
         sla a
@@ -99,13 +101,13 @@ ChangeAddress:
         sla a
         ld h, a
 
-        call WaitHex
+        call WaitHex ; wait for second digit
         cp $ff
         jr z, EndChangeAddress
         add h
         ld h, a
 
-        call WaitHex
+        call WaitHex ; wait for first digit
         cp $ff
         jr z, EndChangeAddress
         sla a
@@ -114,7 +116,7 @@ ChangeAddress:
         sla a
         ld l, a
 
-        call WaitHex
+        call WaitHex ; wait for second digit
         cp $ff
         jr z, EndChangeAddress
         add l
@@ -133,14 +135,7 @@ EndChangeAddress
 
 TextToggle:
         ld a, (Flags)
-        bit 4, a
-        jr z, ToggleTextOn
-        res 4, a
-        jr ToggleTextGo
-ToggleTextOn:
-        set 4, a
-ToggleTextGo:
+        xor $10
         ld (Flags), a
 
         ret
-
