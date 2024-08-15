@@ -10,9 +10,9 @@ UpdateView:
         ld a, l
         and $f0 ; we want to start the row on a multiple of $10
         ld l, a
-        ld (_ADDRESS), hl
         ld de, $ff80 ; move the start row back eight
-        call FixHL
+        add hl, de
+        ld (_ADDRESS), hl
 
         ld c, $10 ; row counter
 UpdateLoopRow:
@@ -29,8 +29,8 @@ StartRow:
         rst 16
         ld b, $10 ; column counter
 UpdateLoopCol:
-        ld a, $00 ; self-modifying code, this is flipped between $00 and $ff
-        cp $00
+        ld a, (_FLAGS)
+        bit 0, a
         jr nz, PrintChar
 
         ld a, (hl)

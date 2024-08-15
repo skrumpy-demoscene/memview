@@ -3,7 +3,7 @@ FixHL:
         add hl, de
         ld (_ADDRESS), hl
 
-        ret
+        jr Loop
         
 ForwardAddr:
         ld de, $0001
@@ -52,7 +52,17 @@ PokeAddress:
         inc hl
         ld (_ADDRESS), hl
 
-        ret
+        jr Loop
+
+LoopJumpJump:
+        jr Loop ; need this as we're too far to JR directly
+
+TextToggle:
+        ld a, (_FLAGS)
+        xor $01
+        ld (_FLAGS), a
+
+        jr LoopJump
 
 ChangeAddress:
         ; clear the address
@@ -90,15 +100,7 @@ ChangeAddress:
 
         ld (_ADDRESS), hl
 
-        ret
-
-TextToggle:
-        ; self-modifying code, changes the result of the $cp $00 and thus the Z flag
-        ld a, (UpdateLoopCol+1)
-        cpl
-        ld (UpdateLoopCol+1), a
-
-        ret
+        jr LoopJumpJump
 
 SlideA:
         sla a
