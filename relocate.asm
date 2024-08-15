@@ -18,6 +18,8 @@ RelocateLoop:
         ld a, (hl)
         cp $cd ; is it a call?
         jr z, RelocateUpdate ; if so, update the following bytes
+        cp $cc ; is it a call?
+        jr z, RelocateUpdate ; if so, update the following bytes
 RelocateCont:
         inc hl
         dec bc
