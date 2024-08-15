@@ -1,7 +1,7 @@
 FixHL:
-        ld hl, (Address)
+        ld hl, (_ADDRESS)
         add hl, de
-        ld (Address), hl
+        ld (_ADDRESS), hl
 
         ret
         
@@ -47,10 +47,10 @@ PokeAddress:
         ret z
         add h
 
-        ld hl, (Address)
+        ld hl, (_ADDRESS)
         ld (hl), a ; update data
         inc hl
-        ld (Address), hl
+        ld (_ADDRESS), hl
 
         ret
 
@@ -88,7 +88,7 @@ ChangeAddress:
         add l
         ld l, a
 
-        ld (Address), hl
+        ld (_ADDRESS), hl
 
         ret
 

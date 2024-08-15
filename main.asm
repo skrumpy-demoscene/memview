@@ -1,5 +1,5 @@
         org	$1000
-
+        define _ADDRESS $fefe
 Main:
         push hl
 
@@ -66,6 +66,3 @@ RolocateROM:
         dec bc
 
         jr RelocateCont
-
-Address:
-        defb $00, $80
