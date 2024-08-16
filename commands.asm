@@ -38,13 +38,13 @@ PokeAddress:
 
         call WaitHex ; wait for first digit
         cp $ff
-        ret z
+        jr z, Loop
         call SlideA
         ld h, a
         
         call WaitHex ; wait for second digit
         cp $ff
-        ret z
+        jr z, Loop
         add h
 
         ld hl, (_ADDRESS)
@@ -76,25 +76,25 @@ ChangeAddress:
 
         call WaitHex ; wait for first digit
         cp $ff
-        ret z
+        jr z, LoopJump
         call SlideA
         ld h, a
 
         call WaitHex ; wait for second digit
         cp $ff
-        ret z
+        jr z, LoopJump
         add h
         ld h, a
 
         call WaitHex ; wait for first digit
         cp $ff
-        ret z
+        jr z, LoopJumpJump
         call SlideA
         ld l, a
 
         call WaitHex ; wait for second digit
         cp $ff
-        ret z
+        jr z, LoopJumpJump
         add l
         ld l, a
 
