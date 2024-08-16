@@ -1,4 +1,4 @@
-        org	$fc00
+        org	$fd00
 
 Main:
         push hl
@@ -18,6 +18,6 @@ Exit:
         ret
 
 Address:
-        defb $00, $fc
+        defb $00, $fd
 Flags:
         defb $00
