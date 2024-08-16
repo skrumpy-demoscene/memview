@@ -63,7 +63,7 @@ PrintAddress:
 PrintData:
         ld hl, (Address)
         ld a, (Flags)
-        bit 0, a
+        bit 4, a
         jr nz, PrintChar
         ld a, (hl)
         ld d, a
