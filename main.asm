@@ -2,8 +2,6 @@
 
 Main:
         push hl
-        push de
-        push af
 
 Loop:
         call UpdateView
@@ -15,19 +13,11 @@ Loop:
         INCLUDE "commands.asm"
 
 Exit:
-        pop af
-        pop de
-
-        ; return the current address
-        ld hl, (Address)
-        push hl
-        pop bc
-
         pop hl
 
         ret
 
 Address:
-        defb $00, $5a
+        defb $00, $fc
 Flags:
         defb $00
