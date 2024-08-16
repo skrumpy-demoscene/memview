@@ -6,6 +6,8 @@ UserInput:
         
         cp $20 // change address
         call z, ChangeAddress
+        cp $0d // poke address
+        call z, PokeAddress
 
         cp $09 // forward by 1
         call z, ForwardAddr

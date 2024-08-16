@@ -62,6 +62,17 @@ UpdateLoopCol:
         ld d, l
         call PrintValue
 
+        ld a, $16
+        rst 16
+        ld a, $11
+        rst 16
+        ld a, $0a
+        rst 16
+
+        ld a, (hl)
+        ld d, a
+        call PrintValue
+
         ld a, l
         and $0f
         rla

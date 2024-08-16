@@ -7,5 +7,5 @@
 7 REM on from the same addr
 8 REM ***********************
 9 REM 
-10 PRINT USR 64768: GOTO 9999
+10 PRINT USR 64512: GOTO 9999
 20 LOAD "" CODE : GOTO 10
