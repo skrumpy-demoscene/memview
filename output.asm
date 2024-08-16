@@ -108,23 +108,24 @@ PrintValue: ; print the two character hex of the value in D
         rra
         rra
         rra
-        add $30 ; TODO optimise
-        cp $3a
-        jr c, PrintValueDigitHigh
-        add $07 ; if higher than 9 move up to A
-PrintValueDigitHigh:
-        rst 16
+        call PrintValueDigit
 
         ld a, d
         and %00001111
-        add $30 ; TODO optimise
+        call PrintValueDigit
+
+        ret
+
+PrintValueDigit:
+        add $30
         cp $3a
-        jr c, PrintValueDigitLow
+        jr c, PrintValueDigitSkip
         add $07 ; if higher than 9 move up to A
-PrintValueDigitLow:
+PrintValueDigitSkip:
         rst 16
 
         ret
+
 PrintAt: ; voes the cursor to row D column E
         ld a, $16
         rst 16
