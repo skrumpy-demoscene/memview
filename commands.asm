@@ -1,19 +1,7 @@
 FixHL:
         ld hl, (Address)
         add hl, de
-
-        ld d, a
-        and $f8 ; we want to land on a multiple of 8
-        ld l, a
         ld (Address), hl
-
-        ld a, d
-        and $07 ; get address offset
-        ld d, a
-        ld a, (Flags)
-        and $f8
-        add d
-        ld (Flags), a   ; update flags
 
         ret
         
@@ -89,8 +77,6 @@ ChangeAddress:
         add l
 
         ld (Address), hl
-        ld de, $0000
-        call FixHL
 
         ; clear prompt
         ld a, $16
