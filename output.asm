@@ -10,7 +10,6 @@ UpdateView:
         ld hl, (Address)
         push hl
         ld a, l
-
         and $f0 ; we want to start the row on a multiple of $10
         ld l, a
         ld (Address), hl
@@ -62,6 +61,16 @@ UpdateLoopCol:
         call PrintValue
         ld d, l
         call PrintValue
+
+        ld a, l
+        and $0f
+        rla
+        add $80
+        ld l, a
+        ld h, $58
+        ld (hl), $31
+        inc hl
+        ld (hl), $31
 
         ret
 

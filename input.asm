@@ -3,20 +3,25 @@ UserInput:
 
         cp $58 // exit
         call z, Exit
+        
         cp $20 // change address
         call z, ChangeAddress
-        cp $50 // forward by 1
+
+        cp $09 // forward by 1
         call z, ForwardAddr
-        cp $4f // back by 1
+        cp $08 // back by 1
         call z, BackAddr
-        cp $0a // forward by 8
+
+        cp $0a // forward by 16
         call z, ForwardLine
-        cp $0b // back by 8
+        cp $0b // back by 16
         call z, BackLine
-        cp $09 // forward by 256
+
+        cp $50 // forward by 256
         call z, ForwardPage
-        cp $08 // back by 256
+        cp $4f // back by 256
         call z, BackPage
+
         cp $54 // toggle text
         call z, TextToggle
 
@@ -35,12 +40,14 @@ WaitKeyDown:
         ld a, ($5C3B)
         bit 5, a
         jr z, WaitKeyDown
+        res 5, a
+        ld ($5C3B), a
         ld a, ($5C08)
         push af
 
 WaitKeyUp:
-        ld hl, $5C08
-        ld (hl), $00
+        ld a, $00
+        ld ($5C08), a
         call $02BF
         ld a, ($5C08)
         cp $00

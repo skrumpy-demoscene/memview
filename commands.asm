@@ -18,13 +18,13 @@ BackAddr:
         ret
 
 ForwardLine:
-        ld de, $0008
+        ld de, $0010
         call FixHL
 
         ret
         
 BackLine:
-        ld de, $fff8
+        ld de, $fff0
         call FixHL
 
         ret
