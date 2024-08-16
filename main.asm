@@ -54,10 +54,14 @@ UserInput:
         jp z, Exit
         cp $20 // change address
         jp z, ChangeAddress
-        cp $36 // forward by 8
-        jp z, ForwardAddress
-        cp $37 // back by 8
-        jp z, BackAddress
+        cp $0a // forward by 8
+        jp z, ForwardLine
+        cp $0b // back by 8
+        jp z, BackLine
+        cp $09 // forward by 256
+        jp z, ForwardPage
+        cp $08 // back by 256
+        jp z, BackPage
 
         jr UserInput
 
@@ -163,23 +167,39 @@ PrintValueDigitLow:
 
         ret
 
-ForwardAddress:
+ForwardLine:
         ld hl, (Address)
         ld b, $08
-ForwardAddressInc:
+ForwardLineInc:
         inc hl
-        djnz ForwardAddressInc
+        djnz ForwardLineInc
 
         ld (Address), hl
 
         jp UpdateView
         
-BackAddress:
+BackLine:
         ld hl, (Address)
         ld b, $08
-BackAddressDec:
+BackLineDec:
         dec hl
-        djnz BackAddressDec
+        djnz BackLineDec
+
+        ld (Address), hl
+
+        jp UpdateView
+
+ForwardPage:
+        ld hl, (Address)
+        inc h
+
+        ld (Address), hl
+
+        jp UpdateView
+        
+BackPage:
+        ld hl, (Address)
+        dec h
 
         ld (Address), hl
 
@@ -219,6 +239,7 @@ ChangeAddress:
         ld l, a
         call WaitHex
         add l
+        and $f8 ; we want to land on a multiple of 8
         ld l, a
 
         ld (Address), hl
@@ -248,9 +269,12 @@ ChangeAddress:
 Exit:
         pop af
         pop de
+
+        ; return the current address
         ld hl, (Address)
         push hl
         pop bc
+        
         pop hl
 
         ret
