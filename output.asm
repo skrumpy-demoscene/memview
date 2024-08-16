@@ -84,7 +84,7 @@ PrintCont:
 
         ld a, l
         and $0f
-        rla
+        sla a
         add $80
         ld l, a
         ld h, $58

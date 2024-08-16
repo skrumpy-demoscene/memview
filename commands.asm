@@ -57,11 +57,12 @@ PokeAddress:
         call WaitHex
         cp $ff
         jr z, EndPokeAddress
-        rla
-        rla
-        rla
-        rla
+        sla a
+        sla a
+        sla a
+        sla a
         ld h, a
+        
         call WaitHex
         cp $ff
         jr z, EndPokeAddress
@@ -106,28 +107,32 @@ ChangeAddress:
         call WaitHex
         cp $ff
         jr z, EndChangeAddress
-        rla
-        rla
-        rla
-        rla
+        sla a
+        sla a
+        sla a
+        sla a
         ld h, a
+
         call WaitHex
         cp $ff
         jr z, EndChangeAddress
         add h
         ld h, a
+
         call WaitHex
         cp $ff
         jr z, EndChangeAddress
-        rla
-        rla
-        rla
-        rla
+        sla a
+        sla a
+        sla a
+        sla a
         ld l, a
+
         call WaitHex
         cp $ff
         jr z, EndChangeAddress
         add l
+        ld l, a
 
         ld (Address), hl
 
