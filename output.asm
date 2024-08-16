@@ -16,17 +16,6 @@ UpdateView:
 
         ld c, $10 ; row counter
 UpdateLoopRow:
-        ld a, $14 ; inverse attr
-        rst 16
-        ld a, c ; if this is the active row, set bright, otherwise don't
-        cp $08
-        jr nz, NotActiveRow
-        ld a, $01 ; set inverse
-        jr StartRow
-NotActiveRow:
-        ld a, $00 ; set not inverse
-StartRow:
-        rst 16
         ld b, $10 ; column counter
 UpdateLoopCol:
         ld a, (_FLAGS)
@@ -77,9 +66,9 @@ ColChange:
         sla a
         ld l, a
         ld h, $59
-        set 7, (hl) ; set the char to flash
+        ld (hl), $0e
         inc hl
-        set 7, (hl) ; set the char to flash
+        ld (hl), $0e
 
         ret
 
