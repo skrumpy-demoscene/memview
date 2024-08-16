@@ -1,4 +1,5 @@
         org	$1000
+        define _FLAGS $fefd
         define _ADDRESS $fefe
 Main:
 Loop:
@@ -9,31 +10,32 @@ Loop:
         ret z
         
         cp $20 ; change address
-        call z, ChangeAddress
+        jr z, ChangeAddress
         cp $0d ; poke address
-        call z, PokeAddress
+        jr z, PokeAddress
 
         cp $09 ; forward by 1
-        call z, ForwardAddr
+        jr z, ForwardAddr
         cp $08 ; back by 1
-        call z, BackAddr
+        jr z, BackAddr
 
         cp $0a ; forward by 16
-        call z, ForwardLine
+        jr z, ForwardLine
         cp $0b ; back by 16
-        call z, BackLine
+        jr z, BackLine
 
         cp $50 ; forward by 256
-        call z, ForwardPage
+        jr z, ForwardPage
         cp $4f ; back by 256
-        call z, BackPage
+        jr z, BackPage
 
         cp $54 ; toggle text
-        call z, TextToggle
+        jr z, TextToggle
 
+LoopJump:
         jr Loop
 
-        INCLUDE "output.asm"
         INCLUDE "commands.asm"
+        INCLUDE "output.asm"
         INCLUDE "input.asm"
         INCLUDE "relocate.asm"
