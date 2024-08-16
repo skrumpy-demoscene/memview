@@ -8,9 +8,22 @@ UpdateView:
         call ResetColour
 
         ld c, $10
+        ld de, $ffe0
+        call FixHL
 UpdateLoopRow:
-        ld b, $08
+        ld a, $13
+        rst 16
+        ld a, c
+        cp $0c
+        jr nz, NotActiveRow
+        ld a, $01
+        jr StartRow
+NotActiveRow:
+        ld a, $00
+StartRow:
+        rst 16
         call PrintAddress
+        ld b, $08
 UpdateLoopCol:
         call PrintData
         
@@ -28,7 +41,7 @@ UpdateLoopCol:
         dec c
         jr nz, UpdateLoopRow
 
-        ld de, $ff80
+        ld de, $ffa0
         call FixHL
 
         ret
