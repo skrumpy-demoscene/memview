@@ -1,30 +1,30 @@
 UserInput:
         call WaitKey
 
-        cp $58 // exit
+        cp $58 ; exit
         jp z, Exit
         
-        cp $20 // change address
+        cp $20 ; change address
         call z, ChangeAddress
-        cp $0d // poke address
+        cp $0d ; poke address
         call z, PokeAddress
 
-        cp $09 // forward by 1
+        cp $09 ; forward by 1
         call z, ForwardAddr
-        cp $08 // back by 1
+        cp $08 ; back by 1
         call z, BackAddr
 
-        cp $0a // forward by 16
+        cp $0a ; forward by 16
         call z, ForwardLine
-        cp $0b // back by 16
+        cp $0b ; back by 16
         call z, BackLine
 
-        cp $50 // forward by 256
+        cp $50 ; forward by 256
         call z, ForwardPage
-        cp $4f // back by 256
+        cp $4f ; back by 256
         call z, BackPage
 
-        cp $54 // toggle text
+        cp $54 ; toggle text
         call z, TextToggle
 
         ret
@@ -48,6 +48,7 @@ WaitKeyDown:
         push af
 
 WaitKeyUp:
+; wait for the key to be released
         ld a, $00
         ld ($5C08), a
         call $02BF
@@ -62,15 +63,15 @@ WaitKeyUp:
 
 WaitHex:
         call WaitKey
-        cp $20 // abort!
+        cp $20 ; abort!
         jr z, WaitHexAbort
-        cp $30 // check '0' or above
+        cp $30 ; check '0' or above
         jr c, WaitHex
-        cp $3b // check below ':'
+        cp $3b ; check below ':'
         jr c, WaitHexNumber
-        cp $41 // check 'A' or above
+        cp $41 ; check 'A' or above
         jr c, WaitHex
-        cp $47 // check below 'G'
+        cp $47 ; check below 'G'
         jr c, WaitHexLetter
         jr WaitHex
 WaitHexNumber:
@@ -88,5 +89,5 @@ WaitHexLetter:
 
         ret
 WaitHexAbort:
-        ld a, $ff
+        ld a, $ff ; anything that detects an impossible digit to display will know to abort
         ret
