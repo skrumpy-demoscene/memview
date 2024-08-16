@@ -28,6 +28,6 @@ Exit:
         ret
 
 Address:
-        defb $80, $fe
+        defb $00, $fd
 Flags:
         defb $00
