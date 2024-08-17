@@ -17,7 +17,7 @@ WaitKeyDown:
         push af
 
 WaitKeyUp:
-; wait for the key to be released
+        ; wait for the key to be released
         ld a, $00
         ld ($5C08), a
         call $02BF ; scan for keypress - KEYBOARD

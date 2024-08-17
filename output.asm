@@ -101,9 +101,6 @@ PrintValue: ; print the two character hex of the value in D
 
         ld a, d
         and %00001111
-        call PrintValueDigit
-
-        ret
 
 PrintValueDigit:
         add $30
