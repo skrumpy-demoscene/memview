@@ -93,28 +93,8 @@ PrintSkip:
         ld a, $2e
         rst 16
 PrintSpace:
-        ld a, $10
+        ld a, $20
         rst 16
-
-        ld a, d
-        and $07
-        rst 16
-
-        ld a, $11
-        rst 16
-
-        ld a, d
-        and $38
-        rra
-        rra
-        rra
-        rst 16
-
-        ld a, d
-        ld a, $83
-        rst 16
-
-        call ResetColour
         jr PrintEnd
 
 PrintValue:
