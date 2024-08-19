@@ -31,5 +31,3 @@ Exit:
 
 Address:
         defb $00, $fd
-Flags:
-        defb $00
