@@ -65,6 +65,8 @@ PokeAddress:
 
         ld hl, (Address)
         ld (hl), a
+        inc hl
+        ld (Address), hl
 
         ; clear prompt
         ld a, $16
