@@ -30,13 +30,13 @@ BackLine:
         ret
 
 ForwardPage:
-        ld de, $0080
+        ld de, $0100
         call FixHL
 
         ret
         
 BackPage:
-        ld de, $ff80
+        ld de, $ff00
         call FixHL
 
         ret
@@ -49,7 +49,7 @@ ChangeAddress:
         ; create prompt
         ld a, $16
         rst 16
-        ld a, $11
+        ld a, $12
         rst 16
         ld a, $00
         rst 16
@@ -81,7 +81,7 @@ ChangeAddress:
         ; clear prompt
         ld a, $16
         rst 16
-        ld a, $11
+        ld a, $12
         rst 16
         ld a, $00
         rst 16
