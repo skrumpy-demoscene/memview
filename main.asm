@@ -1,7 +1,10 @@
         org	$1000
         define _FLAGS $fefd
         define _ADDRESS $fefe
-Main:
+        define _PROGLEN End-Start-3
+Start:
+        INCLUDE "relocate.asm"
+
 Loop:
         call UpdateView
         call WaitKey
@@ -38,4 +41,4 @@ LoopJump:
         INCLUDE "commands.asm"
         INCLUDE "output.asm"
         INCLUDE "input.asm"
-        INCLUDE "relocate.asm"
+End:

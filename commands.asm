@@ -29,6 +29,9 @@ BackPage:
         ld de, $ff00
         jr FixHL
 
+LoopJumpJump:
+        jr Loop ; need this as we're too far to JR directly
+
 PokeAddress:
         ; create prompt
         ld de, $1106
@@ -53,9 +56,6 @@ PokeAddress:
         ld (_ADDRESS), hl
 
         jr Loop
-
-LoopJumpJump:
-        jr Loop ; need this as we're too far to JR directly
 
 TextToggle:
         ld a, (_FLAGS)

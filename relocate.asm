@@ -1,4 +1,3 @@
-        ; $01c0 / 448 - program length
 Relocate:
         call $0013 ; call a ret
         dec sp
@@ -6,14 +5,14 @@ Relocate:
         ex (sp), hl ; grab the old return address - we now have a PC
         inc sp
         inc sp
-        ld de, $fe3d ; needs to be updated if the program length changes ($10000 - program length - 3)
-        add hl, de ; pull it back to the beginning of the program
-                   ; HL will be the memory counter to work through the code
+        dec hl
+        dec hl
+        dec hl
         ld a, h
         sub $10
         ld d, a
         ld e, l ; DE will be the base to add to each address (ie. the address of Start)
-        ld bc, $01c0 ; length of our program, needs to be updated if the length changes
+        ld bc, _PROGLEN ; length of our program
 RelocateLoop:
         ld a, (hl)
         cp $cd ; is it a call?
@@ -24,7 +23,7 @@ RelocateCont:
         ld a, b
         or c ; check whether we have hit the end of the program
         jr nz, RelocateLoop
-        ret ; all done
+        jr Loop
 RelocateUpdate:
         ld ix, hl
 
