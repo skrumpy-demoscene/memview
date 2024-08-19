@@ -9,8 +9,8 @@ Loop:
         jr Loop
 
         INCLUDE "output.asm"
-        INCLUDE "input.asm"
         INCLUDE "commands.asm"
+        INCLUDE "input.asm"
 
 Exit:
         pop hl
