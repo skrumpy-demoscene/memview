@@ -155,7 +155,6 @@ PrintEnd:
         ret
 PrintChar:
         ld a, (hl)
-        ld d, a
         cp $20 ; check it's above 'space'
         jr c, PrintSkip
         cp $a2 ; and below the last guarnateed UDG (S)
@@ -163,7 +162,8 @@ PrintChar:
         rst 16
         jr PrintSpace
 PrintSkip:
-        ld a, $20
+        ld d, a
+        ld a, $2e
         rst 16
 PrintSpace:
         ld a, $10
@@ -217,38 +217,32 @@ PrintValueDigitLow:
 
 ForwardLine:
         ld hl, (Address)
-        ld b, $08
-ForwardLineInc:
-        inc hl
-        djnz ForwardLineInc
-
+        ld de, $0008
+        add hl, de
         ld (Address), hl
 
         jp UpdateView
         
 BackLine:
         ld hl, (Address)
-        ld b, $08
-BackLineDec:
-        dec hl
-        djnz BackLineDec
-
+        ld de, $fff8
+        add hl, de
         ld (Address), hl
 
         jp UpdateView
 
 ForwardPage:
         ld hl, (Address)
-        inc h
-
+        ld de, $0080
+        add hl, de
         ld (Address), hl
 
         jp UpdateView
         
 BackPage:
         ld hl, (Address)
-        dec h
-
+        ld de, $ff80
+        add hl, de
         ld (Address), hl
 
         jp UpdateView
