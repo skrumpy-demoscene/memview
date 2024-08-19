@@ -1,21 +1,21 @@
 UpdateView:
+        ; set the cursor to 0, 0
         ld de, $0000
         call PrintAt
         
-        /*
-        ld a, $10
-        rst 16
-        ld a, $00
-        rst 16
+        ; set up useful attributes
+        ; ld a, $10
+        ; rst 16
+        ; ld a, $00
+        ; rst 16
 
-        ld a, $11
-        rst 16
-        ld a, $07
-        rst 16
-        */
+        ; ld a, $11
+        ; rst 16
+        ; ld a, $07
+        ; rst 16
 
         ld hl, (Address)
-        push hl
+        push hl ; store this as we want the actual address back at the end
         ld a, l
         and $f0 ; we want to start the row on a multiple of $10
         ld l, a
@@ -25,39 +25,39 @@ UpdateView:
 
         ld c, $10 ; row counter
 UpdateLoopRow:
-        ld a, $13
+        ld a, $13 ; brightness attr
         rst 16
         ld a, c ; if this is the active row, set bright, otherwise don't
         cp $08
         jr nz, NotActiveRow
-        ld a, $01
+        ld a, $01 ; set bright
         jr StartRow
 NotActiveRow:
-        ld a, $00
+        ld a, $00 ; set not bright
 StartRow:
         rst 16
-        ld b, $10
+        ld b, $10 ; column counter
 UpdateLoopCol:
         ld a, (Flags)
-        bit 4, a
+        bit 4, a ; text or digits?
         jr nz, PrintChar
 
         ld a, (hl)
         ld d, a
         call PrintValue
 PrintCont:
-        inc hl
+        inc hl ; clear up after printing NN or '. '
         ld (Address), hl
 
-        djnz UpdateLoopCol
+        djnz UpdateLoopCol ; carry on until end of row
         
         dec c
-        jr nz, UpdateLoopRow
+        jr nz, UpdateLoopRow ; go to next row
 
         pop hl
-        ld (Address), hl
+        ld (Address), hl ; restore the address
 
-        ld de, $1101
+        ld de, $1101 ; print the current address
         call PrintAt
 
         ld d, h
@@ -65,14 +65,14 @@ PrintCont:
         ld d, l
         call PrintValue
 
-        ld de, $1107
+        ld de, $1107 ; print its data
         call PrintAt
 
         ld a, (hl)
         ld d, a
         call PrintValue
 
-        ld a, l
+        ld a, l ; highlight the current address
         and $0f
         sla a
         ld l, a
@@ -101,32 +101,31 @@ PrintSkip:
         rst 16
         jr PrintCont
 
-; print the two character hex of the value in D
-PrintValue:
+PrintValue: ; print the two character hex of the value in D
         ld a, d
         and %11110000
         rra
         rra
         rra
         rra
-        add $30
+        add $30 ; TODO optimise
         cp $3a
         jr c, PrintValueDigitHigh
-        add $07
+        add $07 ; if higher than 9 move up to A
 PrintValueDigitHigh:
         rst 16
 
         ld a, d
         and %00001111
-        add $30
+        add $30 ; TODO optimise
         cp $3a
         jr c, PrintValueDigitLow
-        add $07
+        add $07 ; if higher than 9 move up to A
 PrintValueDigitLow:
         rst 16
 
         ret
-PrintAt:
+PrintAt: ; voes the cursor to row D column E
         ld a, $16
         rst 16
         ld a, d
@@ -134,4 +133,3 @@ PrintAt:
         ld a, e
         rst 16
         ret
-
