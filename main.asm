@@ -1,4 +1,4 @@
-        org	$0000
+        org	$1000
 
 Main:
         push hl
@@ -17,11 +17,22 @@ Exit:
 
         ret
 
-        ; $81d4 / 33236
+        ; $01d4
 Relocate:
-        ld de, $0000 ; this needs to be set by the hacker to the memory address of Main
-        ld hl, de ; HL will be the memory counter to work through the code
-        ld bc, $0200 ; length of our program
+        call $0013 ; call a ret
+        dec sp
+        dec sp
+        ex (sp), hl ; grab the old return address - we now have a PC
+        inc sp
+        inc sp
+        ld de, $FE29
+        add hl, de ; pull it back to the beginning of the program
+                   ; HL will be the memory counter to work through the code
+        ld a, h
+        sub $10
+        ld d, a
+        ld e, l ; DE will be the base to add to each address (ie. the address of Start)
+        ld bc, $01d4 ; length of our program
 RelocateLoop:
         ld a, (hl)
         cp $cd ; is it a call?
@@ -30,27 +41,30 @@ RelocateCont:
         inc hl
         dec bc
         ld a, b
-        or c
+        or c ; check whether we have hit the end of the program
         jr nz, RelocateLoop
-        ret ; all done - check before running!
+        ret ; all done
 RelocateUpdate:
-        inc hl
-        ld a, (hl)
-        add e
-        ld (hl), a
-        jr nc, RelocateNC
-        inc hl
-        inc (hl)
-        jr RelocateC
-RelocateNC:
-        inc hl
-RelocateC:
-        ld a, (hl)
-        add d
-        ld (hl), a
+        ld ix, hl
 
+        ld a, (ix+2) ; get MSB first
+        cp $10
+        jr c, RolocateROM ; this is a ROM call so leave it alone
+        add d
+        ld (ix+2), a
+
+        ld a, (ix+1) ; get LSB
+        add e
+        jr nc, RelocateC ; it overflowed so increase MSB
+        inc (ix+2)
+RelocateC:
+        ld (ix+1), a
+RolocateROM:
+        inc hl ; update the counters for the two address bytes
+        inc hl
         dec bc
         dec bc
+
         jr RelocateCont
 
 Address:
