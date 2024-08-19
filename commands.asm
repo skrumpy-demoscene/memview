@@ -43,16 +43,12 @@ BackPage:
 
 PokeAddress:
         ; create prompt
-        ld a, $16
-        rst 16
-        ld a, $11
-        rst 16
-        ld a, $08
-        rst 16
+        ld de, $1108
+        call PrintAt
         ld a, $3e
         rst 16
-        ld a, $20
-        rst 16
+        // ld a, $20
+        // rst 16
 
         call WaitHex
         cp $ff
@@ -75,14 +71,8 @@ PokeAddress:
 
 EndPokeAddress:
         ; clear prompt
-        ld a, $16
-        rst 16
-        ld a, $11
-        rst 16
-        ld a, $08
-        rst 16
-        ld a, $20
-        rst 16
+        ld de, $1108
+        call PrintAt
         ld a, $20
         rst 16
 
@@ -93,16 +83,12 @@ ChangeAddress:
         ld hl, $0000
 
         ; create prompt
-        ld a, $16
-        rst 16
-        ld a, $11
-        rst 16
-        ld a, $00
-        rst 16
+        ld de, $1100
+        call PrintAt
         ld a, $2a
         rst 16
-        ld a, $20
-        rst 16
+        // ld a, $20
+        // rst 16
 
         call WaitHex
         cp $ff
@@ -138,14 +124,8 @@ ChangeAddress:
 
 EndChangeAddress
         ; clear prompt
-        ld a, $16
-        rst 16
-        ld a, $11
-        rst 16
-        ld a, $00
-        rst 16
-        ld a, $20
-        rst 16
+        ld de, $1100
+        call PrintAt
         ld a, $20
         rst 16
 

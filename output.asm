@@ -1,11 +1,8 @@
 UpdateView:
-        ld a, $16
-        rst 16
-        ld a, $00
-        rst 16
-        ld a, $00
-        rst 16
+        ld de, $0000
+        call PrintAt
         
+        /*
         ld a, $10
         rst 16
         ld a, $00
@@ -15,6 +12,7 @@ UpdateView:
         rst 16
         ld a, $07
         rst 16
+        */
 
         ld hl, (Address)
         push hl
@@ -59,24 +57,16 @@ PrintCont:
         pop hl
         ld (Address), hl
 
-        ld a, $16
-        rst 16
-        ld a, $11
-        rst 16
-        ld a, $02
-        rst 16
+        ld de, $1102
+        call PrintAt
 
         ld d, h
         call PrintValue
         ld d, l
         call PrintValue
 
-        ld a, $16
-        rst 16
-        ld a, $11
-        rst 16
-        ld a, $0a
-        rst 16
+        ld de, $110a
+        call PrintAt
 
         ld a, (hl)
         ld d, a
@@ -137,3 +127,12 @@ PrintValueDigitLow:
         rst 16
 
         ret
+PrintAt:
+        ld a, $16
+        rst 16
+        ld a, d
+        rst 16
+        ld a, e
+        rst 16
+        ret
+
