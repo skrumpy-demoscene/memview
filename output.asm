@@ -3,16 +3,7 @@ UpdateView:
         ld de, $0000
         call PrintAt
         
-        ; set up useful attributes
-        ; ld a, $10
-        ; rst 16
-        ; ld a, $00
-        ; rst 16
-
-        ; ld a, $11
-        ; rst 16
-        ; ld a, $07
-        ; rst 16
+        call $0DAF ; clear screen - CL_ALL
 
         ld hl, (Address)
         push hl ; store this as we want the actual address back at the end

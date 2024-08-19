@@ -38,7 +38,7 @@ WaitKeyDown:
 
         ; wait for keypress
         halt
-        call $02BF
+        call $02BF ; scan for keypress - KEYBOARD
         ld a, ($5C3B)
         bit 5, a
         jr z, WaitKeyDown
@@ -51,7 +51,7 @@ WaitKeyUp:
 ; wait for the key to be released
         ld a, $00
         ld ($5C08), a
-        call $02BF
+        call $02BF ; scan for keypress - KEYBOARD
         ld a, ($5C08)
         cp $00
         jr nz, WaitKeyUp
