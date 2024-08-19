@@ -12,6 +12,7 @@ UpdateView:
         rst 16
         ld a, $00
         rst 16
+        call ResetColour
 
         ld c, $10
 UpdateLoopRow:
@@ -42,13 +43,6 @@ ResetAddress:
         ld (Address), hl
 
 UserInput:
-        ld a, $16
-        rst 16
-        ld a, $12
-        rst 16
-        ld a, $00
-        rst 16
-
         call WaitKey
         cp $58 // exit
         jp z, Exit
@@ -62,8 +56,23 @@ UserInput:
         jp z, ForwardPage
         cp $08 // back by 256
         jp z, BackPage
+        cp $54 // toggle text
+        jp z, TextToggle
 
         jr UserInput
+
+ResetColour:
+        ld a, $10
+        rst 16
+        ld a, $00
+        rst 16
+
+        ld a, $11
+        rst 16
+        ld a, $07
+        rst 16
+
+        ret
 
 WaitKey:
         push hl
@@ -133,14 +142,53 @@ PrintAddress:
 
 PrintData:
         ld hl, (Address)
+        ld a, (Flags)
+        bit 0, a
+        jr nz, PrintChar
         ld a, (hl)
         ld d, a
         call PrintValue
-
+PrintEnd:
         ld a, $20
         rst 16
 
         ret
+PrintChar:
+        ld a, (hl)
+        ld d, a
+        cp $20 ; check it's above 'space'
+        jr c, PrintSkip
+        cp $a2 ; and below the last guarnateed UDG (S)
+        jr nc, PrintSkip
+        rst 16
+        jr PrintSpace
+PrintSkip:
+        ld a, $20
+        rst 16
+PrintSpace:
+        ld a, $10
+        rst 16
+
+        ld a, d
+        and $07
+        rst 16
+
+        ld a, $11
+        rst 16
+
+        ld a, d
+        and $38
+        rra
+        rra
+        rra
+        rst 16
+
+        ld a, d
+        ld a, $83
+        rst 16
+
+        call ResetColour
+        jr PrintEnd
 
 PrintValue:
         ld a, d
@@ -213,7 +261,7 @@ ChangeAddress:
         ; create prompt
         ld a, $16
         rst 16
-        ld a, $10
+        ld a, $11
         rst 16
         ld a, $00
         rst 16
@@ -247,7 +295,7 @@ ChangeAddress:
         ; clear prompt
         ld a, $16
         rst 16
-        ld a, $10
+        ld a, $11
         rst 16
         ld a, $00
         rst 16
@@ -266,6 +314,18 @@ ChangeAddress:
 
         jp UpdateView
 
+TextToggle:
+        ld a, (Flags)
+        bit 0, a
+        jr z, ToggleTextOn
+        res 0, a
+        jr ToggleTextGo
+ToggleTextOn:
+        set 0, a
+ToggleTextGo:
+        ld (Flags), a
+        jp UpdateView
+
 Exit:
         pop af
         pop de
@@ -274,10 +334,12 @@ Exit:
         ld hl, (Address)
         push hl
         pop bc
-        
+
         pop hl
 
         ret
 
 Address:
         defb $00, $fd
+Flags:
+        defb $00
