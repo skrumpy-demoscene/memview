@@ -55,12 +55,16 @@ PokeAddress:
         rst 16
 
         call WaitHex
+        cp $ff
+        jr z, EndPokeAddress
         rla
         rla
         rla
         rla
         ld h, a
         call WaitHex
+        cp $ff
+        jr z, EndPokeAddress
         add h
 
         ld hl, (Address)
@@ -68,6 +72,7 @@ PokeAddress:
         inc hl
         ld (Address), hl
 
+EndPokeAddress:
         ; clear prompt
         ld a, $16
         rst 16
@@ -85,7 +90,6 @@ PokeAddress:
 ChangeAddress:
         ; clear the address
         ld hl, $0000
-        ld (Address), hl
 
         ; create prompt
         ld a, $16
@@ -100,25 +104,34 @@ ChangeAddress:
         rst 16
 
         call WaitHex
+        cp $ff
+        jr z, EndChangeAddress
         rla
         rla
         rla
         rla
         ld h, a
         call WaitHex
+        cp $ff
+        jr z, EndChangeAddress
         add h
         ld h, a
         call WaitHex
+        cp $ff
+        jr z, EndChangeAddress
         rla
         rla
         rla
         rla
         ld l, a
         call WaitHex
+        cp $ff
+        jr z, EndChangeAddress
         add l
 
         ld (Address), hl
 
+EndChangeAddress
         ; clear prompt
         ld a, $16
         rst 16

@@ -62,6 +62,8 @@ WaitKeyUp:
 
 WaitHex:
         call WaitKey
+        cp $20 // abort!
+        jr z, WaitHexAbort
         cp $30 // check '0' or above
         jr c, WaitHex
         cp $3b // check below ':'
@@ -84,4 +86,7 @@ WaitHexLetter:
         ld a, d
         sub $37
 
+        ret
+WaitHexAbort:
+        ld a, $ff
         ret
