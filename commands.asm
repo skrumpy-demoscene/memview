@@ -43,7 +43,7 @@ BackPage:
 
 PokeAddress:
         ; create prompt
-        ld de, $1108
+        ld de, $1106
         call PrintAt
         ld a, $3e
         rst 16
@@ -71,7 +71,7 @@ PokeAddress:
 
 EndPokeAddress:
         ; clear prompt
-        ld de, $1108
+        ld de, $1106
         call PrintAt
         ld a, $20
         rst 16
