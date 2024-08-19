@@ -40,7 +40,46 @@ BackPage:
         call FixHL
 
         ret
-        
+
+PokeAddress:
+        ; create prompt
+        ld a, $16
+        rst 16
+        ld a, $11
+        rst 16
+        ld a, $08
+        rst 16
+        ld a, $3e
+        rst 16
+        ld a, $20
+        rst 16
+
+        call WaitHex
+        rla
+        rla
+        rla
+        rla
+        ld h, a
+        call WaitHex
+        add h
+
+        ld hl, (Address)
+        ld (hl), a
+
+        ; clear prompt
+        ld a, $16
+        rst 16
+        ld a, $11
+        rst 16
+        ld a, $08
+        rst 16
+        ld a, $20
+        rst 16
+        ld a, $20
+        rst 16
+
+        ret
+
 ChangeAddress:
         ; clear the address
         ld hl, $0000
@@ -49,7 +88,7 @@ ChangeAddress:
         ; create prompt
         ld a, $16
         rst 16
-        ld a, $12
+        ld a, $11
         rst 16
         ld a, $00
         rst 16
@@ -81,17 +120,9 @@ ChangeAddress:
         ; clear prompt
         ld a, $16
         rst 16
-        ld a, $12
+        ld a, $11
         rst 16
         ld a, $00
-        rst 16
-        ld a, $20
-        rst 16
-        ld a, $20
-        rst 16
-        ld a, $20
-        rst 16
-        ld a, $20
         rst 16
         ld a, $20
         rst 16
