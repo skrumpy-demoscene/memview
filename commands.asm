@@ -7,39 +7,27 @@ FixHL:
         
 ForwardAddr:
         ld de, $0001
-        call FixHL
-
-        ret
+        jr FixHL
         
 BackAddr:
         ld de, $ffff
-        call FixHL
-
-        ret
+        jr FixHL
 
 ForwardLine:
         ld de, $0010
-        call FixHL
-
-        ret
+        jr FixHL
         
 BackLine:
         ld de, $fff0
-        call FixHL
-
-        ret
+        jr FixHL
 
 ForwardPage:
         ld de, $0100
-        call FixHL
-
-        ret
+        jr FixHL
         
 BackPage:
         ld de, $ff00
-        call FixHL
-
-        ret
+        jr FixHL
 
 PokeAddress:
         ; create prompt
@@ -47,17 +35,12 @@ PokeAddress:
         call PrintAt
         ld a, $3e
         rst 16
-        ; ld a, $20
-        ; rst 16
 
         ; TODO optimise
         call WaitHex ; wait for first digit
         cp $ff
         jr z, EndPokeAddress
-        sla a
-        sla a
-        sla a
-        sla a
+        call SlideA
         ld h, a
         
         call WaitHex ; wait for second digit
@@ -79,6 +62,12 @@ EndPokeAddress:
 
         ret
 
+WaitForDigit:
+        call WaitHex ; wait for first digit
+        cp $ff
+        jr z, EndChangeAddress
+
+        ret
 ChangeAddress:
         ; clear the address
         ld hl, $0000
@@ -88,37 +77,20 @@ ChangeAddress:
         call PrintAt
         ld a, $2a
         rst 16
-        ; ld a, $20
-        ; rst 16
 
-        ; TODO optimise
-        call WaitHex ; wait for first digit
-        cp $ff
-        jr z, EndChangeAddress
-        sla a
-        sla a
-        sla a
-        sla a
+        call WaitForDigit
+        call SlideA
         ld h, a
 
-        call WaitHex ; wait for second digit
-        cp $ff
-        jr z, EndChangeAddress
+        call WaitForDigit
         add h
         ld h, a
 
-        call WaitHex ; wait for first digit
-        cp $ff
-        jr z, EndChangeAddress
-        sla a
-        sla a
-        sla a
-        sla a
+        call WaitForDigit
+        call SlideA
         ld l, a
 
-        call WaitHex ; wait for second digit
-        cp $ff
-        jr z, EndChangeAddress
+        call WaitForDigit
         add l
         ld l, a
 
@@ -138,4 +110,11 @@ TextToggle:
         xor $10
         ld (Flags), a
 
+        ret
+
+SlideA:
+        sla a
+        sla a
+        sla a
+        sla a
         ret
