@@ -16,15 +16,15 @@ UpdateView:
 
         ld c, $10 ; row counter
 UpdateLoopRow:
-        ld a, $13 ; brightness attr
+        ld a, $14 ; inverse attr
         rst 16
         ld a, c ; if this is the active row, set bright, otherwise don't
         cp $08
         jr nz, NotActiveRow
-        ld a, $01 ; set bright
+        ld a, $01 ; set inverse
         jr StartRow
 NotActiveRow:
-        ld a, $00 ; set not bright
+        ld a, $00 ; set not inverse
 StartRow:
         rst 16
         ld b, $10 ; column counter
@@ -39,6 +39,15 @@ UpdateLoopCol:
 PrintCont:
         inc hl ; clear up after printing NN or '. '
         ld (Address), hl
+
+        ld a, $13 ; brightness attr
+        rst 16
+        ld a, $00
+        bit 1, b
+        jr z, ColChange        
+        ld a, $01
+ColChange:
+        rst 16
 
         djnz UpdateLoopCol ; carry on until end of row
         
@@ -68,9 +77,9 @@ PrintCont:
         sla a
         ld l, a
         ld h, $59
-        ld (hl), $31
+        set 7, (hl) ; set the char to flash
         inc hl
-        ld (hl), $31
+        set 7, (hl) ; set the char to flash
 
         ret
 
