@@ -5,12 +5,12 @@ UpdateView:
         
         call $0DAF ; clear screen - CL_ALL
 
-        ld hl, (Address)
+        ld hl, (_ADDRESS)
         push hl ; store this as we want the actual address back at the end
         ld a, l
         and $f0 ; we want to start the row on a multiple of $10
         ld l, a
-        ld (Address), hl
+        ld (_ADDRESS), hl
         ld de, $ff80 ; move the start row back eight
         call FixHL
 
@@ -38,7 +38,7 @@ UpdateLoopCol:
         call PrintValue
 PrintCont:
         inc hl ; clear up after printing NN or '. '
-        ld (Address), hl
+        ld (_ADDRESS), hl
 
         ld a, $13 ; brightness attr
         rst 16
@@ -55,7 +55,7 @@ ColChange:
         jr nz, UpdateLoopRow ; go to next row
 
         pop hl
-        ld (Address), hl ; restore the address
+        ld (_ADDRESS), hl ; restore the address
 
         ld de, $1101 ; print the current address
         call PrintAt
