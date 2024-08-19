@@ -5,7 +5,16 @@ UpdateView:
         rst 16
         ld a, $00
         rst 16
-        call ResetColour
+        
+        ld a, $10
+        rst 16
+        ld a, $00
+        rst 16
+
+        ld a, $11
+        rst 16
+        ld a, $07
+        rst 16
 
         ld hl, (Address)
         push hl
@@ -13,13 +22,14 @@ UpdateView:
         and $f0 ; we want to start the row on a multiple of $10
         ld l, a
         ld (Address), hl
-        ld de, $ffc0
+        ld de, $ffc0 ; move the start row back four
         call FixHL
-        ld c, $10
+
+        ld c, $10 ; row counter
 UpdateLoopRow:
         ld a, $13
         rst 16
-        ld a, c
+        ld a, c ; if this is the active row, set bright, otherwise don't
         cp $0c
         jr nz, NotActiveRow
         ld a, $01
@@ -30,15 +40,14 @@ StartRow:
         rst 16
         ld b, $10
 UpdateLoopCol:
-        ld hl, (Address)
         ld a, (Flags)
         bit 4, a
         jr nz, PrintChar
+
         ld a, (hl)
         ld d, a
         call PrintValue
-        
-        ld hl, (Address)
+PrintCont:
         inc hl
         ld (Address), hl
 
@@ -85,11 +94,6 @@ UpdateLoopCol:
 
         ret
 
-PrintEnd:
-        ld a, $20
-        rst 16
-
-        ret
 PrintChar:
         ld a, (hl)
         cp $20 ; check it's above 'space'
@@ -97,12 +101,18 @@ PrintChar:
         cp $a2 ; and below the last guarnateed UDG (S)
         jr nc, PrintSkip
         rst 16
-        jr PrintEnd
+        ld a, $20
+        rst 16
+        jr PrintCont
+
 PrintSkip:
-        ld d, a
         ld a, $2e
         rst 16
+        ld a, $20
+        rst 16
+        jr PrintCont
 
+; print the two character hex of the value in D
 PrintValue:
         ld a, d
         and %11110000
@@ -124,19 +134,6 @@ PrintValueDigitHigh:
         jr c, PrintValueDigitLow
         add $07
 PrintValueDigitLow:
-        rst 16
-
-        ret
-
-ResetColour:
-        ld a, $10
-        rst 16
-        ld a, $00
-        rst 16
-
-        ld a, $11
-        rst 16
-        ld a, $07
         rst 16
 
         ret
