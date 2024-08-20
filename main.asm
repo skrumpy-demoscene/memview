@@ -5,6 +5,11 @@ Main:
         push de
         push af
 
+Loop:
+        call UpdateView
+        call UserInput
+        jr Loop
+
 UpdateView:
         ld a, $16
         rst 16
@@ -35,31 +40,30 @@ UpdateLoopCol:
         dec c
         jr nz, UpdateLoopRow
 
-        ld hl, (Address)
-        ld b, $80
-ResetAddress:
-        dec hl
-        djnz ResetAddress
-        ld (Address), hl
+        ld de, $ff80
+        call FixHL
+
+        ret
 
 UserInput:
         call WaitKey
-        cp $58 // exit
-        jp z, Exit
-        cp $20 // change address
-        jp z, ChangeAddress
-        cp $0a // forward by 8
-        jp z, ForwardLine
-        cp $0b // back by 8
-        jp z, BackLine
-        cp $09 // forward by 256
-        jp z, ForwardPage
-        cp $08 // back by 256
-        jp z, BackPage
-        cp $54 // toggle text
-        jp z, TextToggle
 
-        jr UserInput
+        cp $58 // exit
+        call z, Exit
+        cp $20 // change address
+        call z, ChangeAddress
+        cp $0a // forward by 8
+        call z, ForwardLine
+        cp $0b // back by 8
+        call z, BackLine
+        cp $09 // forward by 256
+        call z, ForwardPage
+        cp $08 // back by 256
+        call z, BackPage
+        cp $54 // toggle text
+        call z, TextToggle
+
+        ret
 
 ResetColour:
         ld a, $10
@@ -100,6 +104,7 @@ WaitKeyUp:
 
         pop af
         pop hl
+
         ret
 
 WaitHex:
@@ -118,12 +123,14 @@ WaitHexNumber:
         rst 16
         ld a, d
         sub $30
+
         ret
 WaitHexLetter:
         ld d, a
         rst 16
         ld a, d
         sub $37
+
         ret
 
 PrintAddress:
@@ -215,37 +222,36 @@ PrintValueDigitLow:
 
         ret
 
-ForwardLine:
+FixHL:
         ld hl, (Address)
-        ld de, $0008
         add hl, de
         ld (Address), hl
 
-        jp UpdateView
+        ret
+
+ForwardLine:
+        ld de, $0008
+        call FixHL
+
+        ret
         
 BackLine:
-        ld hl, (Address)
         ld de, $fff8
-        add hl, de
-        ld (Address), hl
+        call FixHL
 
-        jp UpdateView
+        ret
 
 ForwardPage:
-        ld hl, (Address)
         ld de, $0080
-        add hl, de
-        ld (Address), hl
+        call FixHL
 
-        jp UpdateView
+        ret
         
 BackPage:
-        ld hl, (Address)
         ld de, $ff80
-        add hl, de
-        ld (Address), hl
+        call FixHL
 
-        jp UpdateView
+        ret
         
 ChangeAddress:
         ; clear the address
@@ -306,7 +312,7 @@ ChangeAddress:
         ld a, $20
         rst 16
 
-        jp UpdateView
+        ret
 
 TextToggle:
         ld a, (Flags)
@@ -318,7 +324,8 @@ ToggleTextOn:
         set 0, a
 ToggleTextGo:
         ld (Flags), a
-        jp UpdateView
+
+        ret
 
 Exit:
         pop af
@@ -334,6 +341,6 @@ Exit:
         ret
 
 Address:
-        defb $00, $fd
+        defb $80, $fe
 Flags:
         defb $00
