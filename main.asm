@@ -1,10 +1,7 @@
-        org	$1000
+        org	$fd00
         define _FLAGS $fefd
         define _ADDRESS $fefe
-        define _PROGLEN End-Start-3
 Start:
-        INCLUDE "relocate.asm"
-
 Loop:
         call UpdateView
         call WaitKey
