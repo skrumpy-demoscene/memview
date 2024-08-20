@@ -23,6 +23,7 @@ Now, with v1.2.2 you don't even need to recompile it for it to work anywhere in 
 - Enter to update value, the cusror will automatically move on
 - Space during an update to abort it
 - T to toggle text / hex (data updates still as hex digits)
+- F to find a byte, G to repeat the search forward
 - Z to dump the screen to the ZX printer (```COPY```)
 - X to exit, RUN will carry on from the same address
 
@@ -30,4 +31,4 @@ Now, with v1.2.2 you don't even need to recompile it for it to work anywhere in 
 - All addresses are in hex
 - Screen updates won't persist
 - Change the value in `$5c8d`([ATTR_P](https://skoolkid.github.io/rom/asm/5C8D.html)) to change the screen colours.
-- The three bytes at ```$fefd```, ```$fefe``` and ```$feff``` are used to store the flags and current address. Sorry if this causes problems.
+- The four bytes at ```$fefc``` to ```$feff``` are used to store the flags and current address. Sorry if this causes problems.

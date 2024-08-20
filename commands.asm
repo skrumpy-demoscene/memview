@@ -29,11 +29,49 @@ BackPage:
         ld de, $ff00
         jr FixHL
 
-LoopJumpJump:
-        jr Loop ; need this as we're too far to JR directly
+TextToggle:
+        ld a, (_FLAGS)
+        xor $01
+        ld (_FLAGS), a
+
+LoopJumpJump:  ; need this as we're too far to JR directly
+        jr LoopJump
+
+Find08:
+        call PromptData
+        ld (_FIND08), a
+Find08Start:
+        ld c, a
+        ld hl, (_ADDRESS)
+        inc hl
+Find08Loop:
+        ld a, (hl)
+        cp c
+        jr z, Find08Found
+        inc hl
+        jr Find08Loop
+Find08Found:
+        ld (_ADDRESS), hl
+        jr LoopJumpJump
+Find08Repeat:
+        ld a, (_FIND08)
+        jr Find08Start
 
 PokeAddress:
-        ; create prompt
+        call PromptData
+        ld hl, (_ADDRESS)
+        ld (hl), a ; update data
+        inc hl
+        ld (_ADDRESS), hl
+
+        jr LoopJumpJump
+
+ChangeAddress:
+        call PromptAddress
+        ld (_ADDRESS), hl
+        jr LoopJumpJump
+
+PromptData:
         ld de, $1106
         call PrintAt
         ld a, $3e
@@ -41,34 +79,20 @@ PokeAddress:
 
         call WaitHex ; wait for first digit
         cp $ff
-        jr z, Loop
+        jr z, LoopJumpJump
         call SlideA
         ld h, a
         
         call WaitHex ; wait for second digit
         cp $ff
-        jr z, Loop
+        jr z, LoopJumpJump
         add h
 
-        ld hl, (_ADDRESS)
-        ld (hl), a ; update data
-        inc hl
-        ld (_ADDRESS), hl
+        ret
 
-        jr LoopJump
+PromptAddress:
+        ld hl, $0000 ; clear the address
 
-TextToggle:
-        ld a, (_FLAGS)
-        xor $01
-        ld (_FLAGS), a
-
-        jr LoopJump
-
-ChangeAddress:
-        ; clear the address
-        ld hl, $0000
-
-        ; create prompt
         ld de, $1100
         call PrintAt
         ld a, $2a
@@ -76,31 +100,30 @@ ChangeAddress:
 
         call WaitHex ; wait for first digit
         cp $ff
-        jr z, LoopJump
+        jr z, LoopJumpJump
         call SlideA
         ld h, a
 
         call WaitHex ; wait for second digit
         cp $ff
-        jr z, LoopJump
+        jr z, LoopJumpJump
         add h
         ld h, a
 
         call WaitHex ; wait for first digit
         cp $ff
+LoopJumpJumpJump:  ; need this as we're too far to JR directly
         jr z, LoopJumpJump
         call SlideA
         ld l, a
 
         call WaitHex ; wait for second digit
         cp $ff
-        jr z, LoopJumpJump
+        jr z, LoopJumpJumpJump
         add l
         ld l, a
 
-        ld (_ADDRESS), hl
-
-        jr LoopJumpJump
+        ret
 
 SlideA:
         sla a
