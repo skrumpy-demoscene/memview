@@ -23,6 +23,7 @@ Now, with v1.2.2 you don't even need to recompile it for it to work anywhere in 
 - Enter to update value, the cusror will automatically move on
 - Space during an update to abort it
 - T to toggle text / hex (data updates still as hex digits)
+- Z to dump the screen to the ZX printer (```COPY```)
 - X to exit, RUN will carry on from the same address
 
 ## Notes

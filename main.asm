@@ -9,6 +9,9 @@ Loop:
         cp $58 ; exit
         ret z
         
+        cp $5a ; COPY screen
+        call z, $0eac
+
         cp $20 ; change address
         jr z, ChangeAddress
         cp $0d ; poke address

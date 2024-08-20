@@ -55,7 +55,7 @@ PokeAddress:
         inc hl
         ld (_ADDRESS), hl
 
-        jr Loop
+        jr LoopJump
 
 TextToggle:
         ld a, (_FLAGS)
