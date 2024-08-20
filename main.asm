@@ -1,16 +1,9 @@
-        org	$8000
+        org	$fd00
 
 Main:
-Address:
-        defb $00, $80
-
         push hl
         push de
-        push bc
         push af
-
-        ld a, $02
-        call $1601
 
 UpdateView:
         ld a, $16
@@ -20,15 +13,16 @@ UpdateView:
         ld a, $00
         rst 16
 
-        ld c, $0f
+        ld c, $10
 UpdateLoopRow:
         ld b, $08
         call PrintAddress
 UpdateLoopCol:
         call PrintData
         
-        ld hl, Address
-        inc (hl)
+        ld hl, (Address)
+        inc hl
+        ld (Address), hl
 
         djnz UpdateLoopCol
         
@@ -36,11 +30,16 @@ UpdateLoopCol:
         rst 16
         ld a, $20
         rst 16
-        ld a, $20
-        rst 16
 
         dec c
         jr nz, UpdateLoopRow
+
+        ld hl, (Address)
+        ld b, $80
+ResetAddress:
+        dec hl
+        djnz ResetAddress
+        ld (Address), hl
 
 UserInput:
         ld a, $16
@@ -55,9 +54,13 @@ UserInput:
         jp z, Exit
         cp $20 // change address
         jp z, ChangeAddress
+        cp $36 // forward by 8
+        jp z, ForwardAddress
+        cp $37 // back by 8
+        jp z, BackAddress
 
         jr UserInput
-        
+
 WaitKey:
         push hl
 WaitKeyDown:
@@ -119,6 +122,8 @@ PrintAddress:
 
         ld a, $20
         rst 16
+        ld a, $20
+        rst 16
 
         ret
 
@@ -158,6 +163,28 @@ PrintValueDigitLow:
 
         ret
 
+ForwardAddress:
+        ld hl, (Address)
+        ld b, $08
+ForwardAddressInc:
+        inc hl
+        djnz ForwardAddressInc
+
+        ld (Address), hl
+
+        jp UpdateView
+        
+BackAddress:
+        ld hl, (Address)
+        ld b, $08
+BackAddressDec:
+        dec hl
+        djnz BackAddressDec
+
+        ld (Address), hl
+
+        jp UpdateView
+        
 ChangeAddress:
         ; clear the address
         ld hl, $0000
@@ -219,11 +246,14 @@ ChangeAddress:
         jp UpdateView
 
 Exit:
-        ld a, $0d
-        rst 16
-
         pop af
-        pop bc
         pop de
+        ld hl, (Address)
+        push hl
+        pop bc
         pop hl
+
         ret
+
+Address:
+        defb $00, $fd
