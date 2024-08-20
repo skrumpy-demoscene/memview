@@ -43,19 +43,44 @@ Find08:
 Find08Start:
         ld c, a
         ld hl, (_ADDRESS)
-        inc hl
 Find08Loop:
+        inc hl
         ld a, (hl)
         cp c
-        jr z, Find08Found
-        inc hl
-        jr Find08Loop
-Find08Found:
+        jr nz, Find08Loop
+
         ld (_ADDRESS), hl
         jr LoopJumpJump
+        
 Find08Repeat:
         ld a, (_FIND08)
         jr Find08Start
+
+Find10:
+        call PromptAddress
+        ld (_FIND10), hl
+Find10Start:
+        ld ix, (_ADDRESS)
+Find10Loop:
+        inc ix
+        ld a, (ix)
+        cp h
+        jr z, Find10Found
+        jr Find10Loop
+Find10Found:
+        ld a, (ix+1)
+        cp l
+        jr nz, Find10Loop
+        ld (_ADDRESS), ix
+        jr LoopJumpJump
+Find10Repeat:
+        ld hl, (_FIND10)
+        jr Find10Start
+
+ChangeAddress:
+        call PromptAddress
+        ld (_ADDRESS), hl
+        jr LoopJumpJump
 
 PokeAddress:
         call PromptData
@@ -64,11 +89,6 @@ PokeAddress:
         inc hl
         ld (_ADDRESS), hl
 
-        jr LoopJumpJump
-
-ChangeAddress:
-        call PromptAddress
-        ld (_ADDRESS), hl
         jr LoopJumpJump
 
 PromptData:
@@ -85,6 +105,7 @@ PromptData:
         
         call WaitHex ; wait for second digit
         cp $ff
+LoopJumpJumpJump:  ; need this as we're too far to JR directly
         jr z, LoopJumpJump
         add h
 
@@ -100,20 +121,19 @@ PromptAddress:
 
         call WaitHex ; wait for first digit
         cp $ff
-        jr z, LoopJumpJump
+        jr z, LoopJumpJumpJump
         call SlideA
         ld h, a
 
         call WaitHex ; wait for second digit
         cp $ff
-        jr z, LoopJumpJump
+        jr z, LoopJumpJumpJump
         add h
         ld h, a
 
         call WaitHex ; wait for first digit
         cp $ff
-LoopJumpJumpJump:  ; need this as we're too far to JR directly
-        jr z, LoopJumpJump
+        jr z, LoopJumpJumpJump
         call SlideA
         ld l, a
 

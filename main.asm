@@ -1,7 +1,8 @@
-        org	$fd00
-        define _FLAGS $fefc
-        define _FIND08 $fefd
-        define _ADDRESS $fefe
+        org	$fc00
+        define _FLAGS End
+        define _FIND08 End+1
+        define _FIND10 End+2
+        define _ADDRESS End+4
 Start:
 Loop:
         call UpdateView
@@ -28,18 +29,23 @@ Loop:
         cp $4f ; back by 256
         jr z, BackPage
 
-        cp $20 ; change address
-        jr z, ChangeAddress
-        cp $0d ; poke address
-        jr z, PokeAddress
-
         cp $46
         jr z, Find08 ; find byte
         cp $47
         jr z, Find08Repeat ; repeat find byte
 
+        cp $48
+        jr z, Find10 ; find byte
+        cp $4a
+        jr z, Find10Repeat ; repeat find byte
+
         cp $54 ; toggle text
         jr z, TextToggle
+
+        cp $20 ; change address
+        jr z, ChangeAddress
+        cp $0d ; poke address
+        jr z, PokeAddress
 
 LoopJump:  ; need this as we're too far to JR directly
         jr Loop
