@@ -147,8 +147,8 @@ PromptAddress:
         ret
 
 SlideA:
-        sla a
-        sla a
-        sla a
-        sla a
+        add a, a
+        add a, a
+        add a, a
+        add a, a
         ret

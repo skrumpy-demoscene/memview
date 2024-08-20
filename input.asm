@@ -7,21 +7,23 @@ WaitKeyDown:
 
         ; wait for keypress
         halt
-        call $02BF ; scan for keypress - KEYBOARD
-        ld a, ($5C3B)
+        rst $38 ; scan for keypress
+        ld hl, $5C3B
+        ld a, (hl)
         bit 5, a
         jr z, WaitKeyDown
         res 5, a
-        ld ($5C3B), a
-        ld a, ($5C08)
+        ld (hl), a
+        ld hl, $5C08
+        ld a, (hl)
         push af
 
 WaitKeyUp:
         ; wait for the key to be released
         ld a, $00
-        ld ($5C08), a
-        call $02BF ; scan for keypress - KEYBOARD
-        ld a, ($5C08)
+        ld (hl), a
+        rst $38 ; scan for keypress
+        ld a, (hl)
         cp $00
         jr nz, WaitKeyUp
 
