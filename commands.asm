@@ -60,18 +60,21 @@ Find10:
         call PromptAddress
         ld (_FIND10), hl
 Find10Start:
-        ld ix, (_ADDRESS)
+        ld bc, hl
+        ld hl, (_ADDRESS)
 Find10Loop:
-        inc ix
-        ld a, (ix)
-        cp h
+        inc hl
+        ld a, (hl)
+        cp b
         jr z, Find10Found
         jr Find10Loop
 Find10Found:
-        ld a, (ix+1)
-        cp l
+        inc hl
+        ld a, (hl)
+        dec hl
+        cp c
         jr nz, Find10Loop
-        ld (_ADDRESS), ix
+        ld (_ADDRESS), hl
         jr LoopJumpJump
 Find10Repeat:
         ld hl, (_FIND10)
@@ -112,8 +115,6 @@ LoopJumpJumpJump:  ; need this as we're too far to JR directly
         ret
 
 PromptAddress:
-        ld hl, $0000 ; clear the address
-
         ld de, $1100
         call PrintAt
         ld a, $2a
