@@ -9,22 +9,19 @@ WaitKeyDown:
         halt
         rst $38 ; scan for keypress
         ld hl, $5C3B
-        ld a, (hl)
-        bit 5, a
+        bit 5, (hl)
         jr z, WaitKeyDown
-        res 5, a
-        ld (hl), a
+        res 5, (hl)
         ld hl, $5C08
         ld a, (hl)
         push af
 
 WaitKeyUp:
         ; wait for the key to be released
-        ld a, $00
-        ld (hl), a
+        ld (hl), h
         rst $38 ; scan for keypress
         ld a, (hl)
-        cp $00
+        cp h
         jr nz, WaitKeyUp
 
         pop af
@@ -35,7 +32,7 @@ WaitKeyUp:
 WaitHex:
         call WaitKey
         cp $20 ; abort!
-        jr z, WaitHexAbort
+        ret z
         cp $30 ; check '0' or above
         jr c, WaitHex
         cp $3b ; check below ':'
@@ -58,7 +55,4 @@ WaitHexLetter:
         ld a, d
         sub $37
 
-        ret
-WaitHexAbort:
-        ld a, $ff ; anything that detects an impossible digit to display will know to abort
         ret

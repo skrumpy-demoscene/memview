@@ -101,13 +101,13 @@ PromptData:
         rst 16
 
         call WaitHex ; wait for first digit
-        cp $ff
+        cp $20
         jr z, LoopJumpJump
         call SlideA
         ld h, a
         
         call WaitHex ; wait for second digit
-        cp $ff
+        cp $20
 LoopJumpJumpJump:  ; need this as we're too far to JR directly
         jr z, LoopJumpJump
         add h
@@ -121,25 +121,25 @@ PromptAddress:
         rst 16
 
         call WaitHex ; wait for first digit
-        cp $ff
+        cp $20
         jr z, LoopJumpJumpJump
         call SlideA
         ld h, a
 
         call WaitHex ; wait for second digit
-        cp $ff
+        cp $20
         jr z, LoopJumpJumpJump
         add h
         ld h, a
 
         call WaitHex ; wait for first digit
-        cp $ff
+        cp $20
         jr z, LoopJumpJumpJump
         call SlideA
         ld l, a
 
         call WaitHex ; wait for second digit
-        cp $ff
+        cp $20
         jr z, LoopJumpJumpJump
         add l
         ld l, a

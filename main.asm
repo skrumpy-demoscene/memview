@@ -1,4 +1,4 @@
-        org	$fc00
+        org	$fd00
         define _FLAGS End
         define _FIND08 End+1
         define _FIND10 End+2
