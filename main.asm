@@ -46,15 +46,21 @@ UserInput:
         rst 16
 
         call WaitKey
-        cp $20
+        cp $58 // exit
         jr z, Exit
+        // cp $20 // select address
 
         jr UserInput
         
 WaitKey:
+        ld hl, $5C6A
+        set 3, (hl)
         halt
-        call $10A8
-        jp nc, WaitKey
+        call $02BF
+        ld a, ($5C3B)
+        bit 5, a
+        jr z, WaitKey
+        ld a, ($5C08)
         ret
 
 PrintAddress:
