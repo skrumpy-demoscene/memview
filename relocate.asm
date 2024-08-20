@@ -7,7 +7,9 @@ Relocate:
         inc sp
         dec hl
         dec hl
+        ld (hl), Loop-Relocate-2 ; Rewrite the first instruction to a JR
         dec hl
+        ld (hl), $18 ; For convenient reloading after the initial relocate
         ld a, h
         sub $10
         ld d, a
