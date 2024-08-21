@@ -11,9 +11,13 @@ Designed to be loaded in whilst you are hacking / editing / playing with other c
  - Return to BASIC without any side-effects
  - Be recompilable anywhere
 
-As of v1.1, it had reached these goals, with 42 bytes left to play with. It even has some visual niceties.
+As of v1.1, it had reached these goals, with 42 bytes left to play with. It even had some visual niceties.
 
-Now, with v1.2.2 you don't even need to recompile it for it to work anywhere in RAM - it *just works*. Load it in to the address you desire and then call ```USR LoadPoint```.
+With v1.2.2 you didn't even need to recompile it for it to work anywhere in RAM - it *just worked*. Load it in to the address you desire and then call ```USR LoadPoint```.
+
+As of v1.3.0, you can now recompile it with the options of including the relocation code, or either of the find routines, depending on your size needs. See the three compiler directives at the top of ```main.asm```.
+
+The full version can't go higher than about ```$fc80```, and the relocatable version no higher than ```$fcfc```. It's inadvisable to compile below ```$6000``` as it will interfere with BASIC and definitely not below ```$5b00``` as screen updates will trash the code.
 
 ## Usage
 
