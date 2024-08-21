@@ -1,9 +1,12 @@
-	org	$fd00
-	define _FLAGS End
-	define _FIND08 End+1
-	define _FIND10 End+2
-	define _ADDRESS End+4
+	org	$4000
+	define _FLAGS $fefd
+	define _ADDRESS $fefe
+	define _FIND08 $fefa
+	define _FIND10 $fefb
+	define _PROGLEN End-Start-3
 Start:
+	INCLUDE "relocate.asm"
+
 Loop:
 	call UpdateView
 	call WaitKey
