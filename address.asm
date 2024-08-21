@@ -10,6 +10,7 @@ PokeAddress:
 	inc hl
 	ld (_ADDRESS), hl
 
+LoopJumpJumpJump:  ; need this as we're too far to JR directly
 	jr LoopJumpJump
 
 PromptData:
@@ -26,8 +27,7 @@ PromptData:
 	
 	call WaitHex ; wait for second digit
 	cp $20
-LoopJumpJumpJump:  ; need this as we're too far to JR directly
-	jr z, LoopJumpJump
+	jr z, LoopJumpJumpJump
 	add h
 
 	ret

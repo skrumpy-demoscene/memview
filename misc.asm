@@ -5,7 +5,6 @@ FixHL:
 
 	jr Loop
 
-	INCLUDE "jumps.asm"
 TextToggle:
 	ld a, (_FLAGS)
 	xor $01
@@ -13,8 +12,3 @@ TextToggle:
 
 LoopJumpJump:  ; need this as we're too far to JR directly
 	jr LoopJump
-
-	INCLUDE "finds.asm"
-
-	INCLUDE "address.asm"
-	
